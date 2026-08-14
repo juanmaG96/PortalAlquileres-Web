@@ -1,0 +1,87 @@
+<div class="animate-fade-in flex flex-col min-h-screen">
+  
+  <!-- Hero Banner Header (Mismo estilo que el Home) -->
+  <div class="bg-gradient-to-b from-brand-900 via-brand-900 to-slate-900 text-white pt-12 pb-24 px-4">
+    <div class="max-w-5xl mx-auto text-center space-y-4">
+      <span class="inline-block px-3 py-1 bg-brand-500/20 text-brand-300 border border-brand-500/30 rounded-full text-xs font-semibold uppercase tracking-wider">
+        Portal Alquileres • {{ cityName }}
+      </span>
+      <h1 class="text-3xl md:text-5xl font-black tracking-tight drop-shadow-md">
+        Publica tu Inmueble
+      </h1>
+      <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto font-normal leading-relaxed">
+        ¿Tienes un {{ apartmentLabel | lowercase }}, casa o residencia estudiantil para alquilar? Completa los datos y sube las fotos. Nuestro equipo verificará la información para conectarte de forma segura con la comunidad estudiantil.
+      </p>
+    </div>
+  </div>
+
+  <!-- Contenedor Principal superpuesto al banner (-mt-12) -->
+  <div class="max-w-6xl mx-auto px-4 -mt-12 mb-16 relative z-10 w-full flex-1">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- COLUMNA IZQUIERDA: Iframe de Tally -->
+        <div class="lg:col-span-2 bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden relative h-[1250px]">
+          <iframe 
+            [src]="safeTallyUrl" 
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            marginheight="0" 
+            marginwidth="0" 
+            title="Formulario de Alta de Inmueble"
+            class="absolute top-0 left-0 w-full h-full border-none bg-transparent">
+          </iframe>
+        </div>
+
+        <!-- COLUMNA DERECHA: WhatsApp Directo y Beneficios -->
+        <div class="space-y-6">
+          <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-3xl p-6 md:p-8 shadow-xl text-white">
+            <h2 class="text-xl font-black mb-2">¿Prefieres el trato directo?</h2>
+            <p class="text-emerald-50 text-xs mb-6">Envíanos un mensaje a nuestro WhatsApp con la información y fotos de tu propiedad. Nosotros armamos el anuncio por ti.</p>
+            
+            <!-- 🟢 Enlace de WhatsApp dinámico cargado desde la variable -->
+            <a [href]="whatsappUrl" target="_blank" class="w-full flex items-center justify-center gap-2 py-3.5 bg-white text-emerald-700 font-bold rounded-xl shadow-lg hover:scale-105 transition-transform text-sm">
+              <span class="text-lg">💬</span>
+              Contactar por WhatsApp
+            </a>
+          </div>
+
+          <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-slate-800 dark:text-slate-200 mb-4 text-sm">¿Por qué publicar aquí?</h3>
+            <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-400">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-500 mt-0.5">✅</span> 
+                <span>Tráfico segmentado: conexión directa con estudiantes.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-500 mt-0.5">✅</span> 
+                <span>Seguridad: filtramos perfiles falsos y estafas.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-500 mt-0.5">✅</span> 
+                <span>Soporte local en tu ciudad.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 dark:bg-slate-800/60 rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 dark:border-slate-700 text-center">
+            <h3 class="text-base font-bold text-slate-800 dark:text-slate-200 mb-2">¿Tienes otra consulta?</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-5 leading-relaxed">
+              Si necesitas ayuda con la plataforma, quieres reportar una publicación o tienes sugerencias, escríbenos directamente.
+            </p>
+            <div class="w-full flex flex-col items-center justify-center gap-1.5 px-4 py-3.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl selection:bg-brand-200 selection:text-brand-900 dark:selection:bg-brand-800 dark:selection:text-brand-100">
+              <span class="text-brand-600 dark:text-brand-400 font-bold text-sm flex items-center gap-1.5 cursor-default">
+                ✉️ Correo electrónico
+              </span>
+              <span class="text-xs text-base text-slate-800 dark:text-slate-100 font-small tracking-wide break-all">
+                {{ contactEmail }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+  </div>
+</div>

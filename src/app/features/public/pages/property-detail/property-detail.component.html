@@ -1,0 +1,352 @@
+<div class="max-w-7xl mx-auto px-4 py-6 space-y-8 animate-fade-in">
+
+  <!-- Breadcrumb Navigation -->
+  <nav class="flex items-center text-xs text-slate-500 dark:text-slate-400 gap-2">
+    <a routerLink="/" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Inicio</a>
+    <span>/</span>
+    <a routerLink="/" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Propiedades</a>
+    <span>/</span>
+    <span class="text-slate-900 dark:text-slate-200 font-medium truncate max-w-xs md:max-w-md">
+      {{ property?.title || 'Detalle' }}
+    </span>
+  </nav>
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="flex flex-col items-center justify-center py-20 gap-4">
+      <div class="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Cargando información del inmueble...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error && !loading) {
+    <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-2xl p-8 text-center max-w-lg mx-auto my-12">
+      <span class="text-4xl">⚠️</span>
+      <h3 class="text-lg font-bold text-rose-800 dark:text-rose-200 mt-2">Error al cargar la propiedad</h3>
+      <p class="text-xs text-rose-600 dark:text-rose-300 mt-1">{{ error }}</p>
+      <a routerLink="/" class="mt-4 inline-block px-5 py-2.5 bg-rose-600 text-white font-semibold text-xs rounded-xl shadow hover:bg-rose-700 transition-colors">
+        Volver al listado
+      </a>
+    </div>
+  }
+
+  <!-- Main Content Container -->
+  @if (property && !loading) {
+    <div class="space-y-8">
+
+      <!-- Top Header: Title, Price & Badges -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
+        <div class="space-y-2">
+          <div class="flex flex-wrap items-center gap-2">
+            @if (property.isPremium) {
+              <span class="px-3 py-1 text-xs font-black tracking-wide uppercase bg-amber-500 text-slate-950 rounded-lg shadow-sm flex items-center gap-1">
+                ⭐ Destacado
+              </span>
+            }
+            <span 
+              [ngClass]="isDemand ? 'bg-amber-600/90 text-white' : 'bg-emerald-600/90 text-white'"
+              class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-lg shadow-sm"
+            >
+              {{ isDemand ? 'Demanda' : 'Alquiler' }}
+            </span>
+            <span class="px-3 py-1 text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg">
+              {{ propertyTypeLabel }}
+            </span>
+          </div>
+
+          <h1 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            {{ property.title }}
+          </h1>
+
+          <p class="text-xs md:text-sm text-slate-600 dark:text-slate-400 flex items-center gap-1.5 font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-brand-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            {{ property.address }}, {{ property.city }}
+          </p>
+        </div>
+
+        <!-- Price Box -->
+        <div class="flex flex-col md:items-end justify-center border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800 pt-4 md:pt-0 md:pl-6">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Precio de publicación</span>
+          <p class="text-3xl font-black text-brand-600 dark:text-brand-400 tracking-tight">
+            {{ formattedPrice }} <span class="text-sm font-normal text-slate-500">/ mes</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Image Gallery Carousel Component -->
+      <div class="space-y-3">
+        <!-- Main Featured Photo View -->
+        <div class="relative w-full h-[360px] md:h-[500px] bg-slate-50 dark:bg-slate-900 rounded-3xl overflow-hidden shadow-lg group">
+          <img 
+            [src]="currentImage" 
+            [alt]="property.title" 
+            (click)="openImageModal()"
+            class="w-full h-full object-contain transition-all duration-300 cursor-pointer hover:scale-[1.02]"
+          />
+
+          <!-- Gallery Arrows -->
+          @if (allImages.length > 1) {
+            <button 
+              (click)="prevImage()"
+              class="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-950/60 hover:bg-slate-950 text-white backdrop-blur-md transition-all opacity-80 group-hover:opacity-100 cursor-pointer"
+              title="Imagen anterior"
+            >
+              ❮
+            </button>
+
+            <button 
+              (click)="nextImage()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-950/60 hover:bg-slate-950 text-white backdrop-blur-md transition-all opacity-80 group-hover:opacity-100 cursor-pointer"
+              title="Siguiente imagen"
+            >
+              ❯
+            </button>
+          }
+
+          <!-- Counter Indicator -->
+          <div class="absolute bottom-4 right-4 bg-slate-950/70 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-xl">
+            📷 {{ selectedImageIndex + 1 }} / {{ allImages.length }}
+          </div>
+        </div>
+
+        <!-- Thumbnail Selector Row -->
+        @if (allImages.length > 1) {
+          <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-thin">
+            @for (img of allImages; track img; let i = $index) {
+              <button 
+                (click)="selectImage(i)"
+                [ngClass]="i === selectedImageIndex ? 'ring-4 ring-brand-500 opacity-100 scale-105' : 'opacity-60 hover:opacity-100'"
+                class="relative w-24 h-20 rounded-xl overflow-hidden shrink-0 transition-all cursor-pointer border border-slate-200 dark:border-slate-800"
+              >
+                <img [src]="img" [alt]="property.title" class="w-full h-full object-cover" />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Grid Layout: Information vs Contact Box -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Left Column: Details, Amenities & Map (2 cols) -->
+        <div class="lg:col-span-2 space-y-8">
+
+          <!-- Amenities / Feature Highlights -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-md space-y-4">
+            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>📊</span> Características Principales
+            </h2>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div class="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-800 text-center">
+                <span class="text-2xl block">🛏️</span>
+                @if (property.rooms === 0) {
+                  <span class="text-xs text-slate-500 dark:text-slate-400 block mt-1">Distribución</span>
+                  <span class="text-sm font-extrabold text-slate-900 dark:text-white">Monoambiente</span>
+                } @else {
+                  <span class="text-xs text-slate-500 dark:text-slate-400 block mt-1">Dormitorios</span>
+                  <span class="text-sm font-extrabold text-slate-900 dark:text-white">{{ property.rooms }}</span>
+                }
+              </div>
+
+              <div class="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-800 text-center">
+                <span class="text-2xl block">🏠</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400 block mt-1">Tipo</span>
+                <span class="text-sm font-extrabold text-slate-900 dark:text-white">{{ propertyTypeLabel }}</span>
+              </div>
+
+              <div class="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-800 text-center">
+                <span class="text-2xl block">📍</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400 block mt-1">Ciudad</span>
+                <span class="text-sm font-extrabold text-slate-900 dark:text-white">{{ property.city }}</span>
+              </div>
+
+              <div class="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-800 text-center">
+                <span class="text-2xl block">🏷️</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400 block mt-1">Modalidad</span>
+                <span class="text-sm font-extrabold text-slate-900 dark:text-white">{{ isDemand ? 'Demanda' : 'Alquiler' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Property Description Section -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-md space-y-4">
+            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>📝</span> Descripción de la Propiedad
+            </h2>
+            <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+              {{ property.description }}
+            </p>
+          </div>
+
+          <!-- Map Section with Leaflet & OSM -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-md space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <span>🗺️</span> Ubicación Exacta en el Mapa
+              </h2>
+              <a 
+                [href]="mobileMapGeoLink" 
+                target="_blank"
+                rel="noopener"
+                class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
+              >
+                Abrir en Google Maps ↗
+              </a>
+            </div>
+
+            <div class="h-80 w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
+              <div #detailMapContainer class="w-full h-full"></div>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 text-center mt-2">
+              Ubicación aproximada en {{ property.address }}, {{ property.city }}.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Direct Contact & WhatsApp Box (1 col) -->
+        <div class="space-y-6">
+          
+          <div class="sticky top-24 bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-lg space-y-6">
+            
+            <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+              <h3 class="text-lg text-center font-bold text-slate-900 dark:text-white">Contacto Directo</h3>
+              <p class="text-xs text-center text-slate-500 dark:text-slate-400 mt-1">
+                Comunícate directamente con el propietario para coordinar una visita.
+              </p>
+            </div>
+
+            <!-- WhatsApp Button CTA -->
+            <a 
+              [href]="whatsappUrl" 
+              target="_blank"
+              rel="noopener"
+              class="w-full py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all flex items-center justify-center gap-3 cursor-pointer group"
+            >
+              <span class="text-2xl group-hover:animate-bounce">💬</span>
+              <span>Contactar por WhatsApp</span>
+            </a>
+
+            <!-- Direct Phone Number display -->
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span class="font-medium text-slate-500">Teléfono:</span>
+              <span class="font-extrabold text-slate-900 dark:text-slate-100">{{ property.contactPhone }}</span>
+            </div>
+
+            <!-- Share Button (Abre el Modal) -->
+            <button 
+              (click)="shareProperty($event)" 
+              class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>🔗</span> Compartir Publicación
+            </button>
+
+            <!-- Security note badge -->
+            <div class="p-3 bg-amber-50 dark:bg-amber-950/30 text-center border border-amber-200/60 dark:border-amber-800/50 rounded-xl text-[11px] text-amber-800 dark:text-amber-300 space-y-1">
+              <span class="font-bold block">🔒 Recomendación de Seguridad</span>
+              <p>No realices transferencias o pagos por adelantado sin antes haber visitado la propiedad en persona.</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  }
+
+</div>
+
+<!-- El Modal de Compartir (Inyectado al final) -->
+@if (showShareModal && property) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in" (click)="closeShareModal($event)">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-sm overflow-hidden p-6 space-y-5" (click)="$event.stopPropagation()">
+      
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h4 class="font-bold text-base text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <span>📢</span> Compartir Inmueble
+        </h4>
+        <button (click)="closeShareModal($event)" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-600 dark:text-slate-400 font-medium">
+        Elige la plataforma donde deseas compartir "{{ property.title }}":
+      </p>
+
+      <div class="space-y-3">
+        <a [href]="whatsappShareUrl" target="_blank" rel="noopener" (click)="closeShareModal()" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-3 cursor-pointer">
+          <span class="text-lg">💬</span>
+          <span>Compartir en WhatsApp</span>
+        </a>
+
+        <a [href]="facebookShareUrl" target="_blank" rel="noopener" (click)="closeShareModal()" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center gap-3 cursor-pointer">
+          <span class="text-lg">📘</span>
+          <span>Compartir en Facebook</span>
+        </a>
+
+        <button (click)="copyLinkToClipboard($event)" class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs rounded-xl transition-colors flex items-center gap-3 cursor-pointer">
+          <span class="text-lg">🔗</span>
+          <span>Copiar Enlace al Portapapeles</span>
+        </button>
+      </div>
+
+      @if (copiedToast) {
+        <div class="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold rounded-xl text-center animate-fade-in">
+          ¡Enlace copiado con éxito!
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- Modal Galería de Imágenes Pantalla Completa -->
+@if (showImageModal) {
+  <div class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/95 backdrop-blur-md animate-fade-in" (click)="closeImageModal()">
+    
+    <!-- Botón Cerrar Superior -->
+    <button (click)="closeImageModal()" class="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer z-[70]">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Imagen Central -->
+    <div class="relative w-full h-full flex items-center justify-center p-4 md:p-12">
+      <img [src]="currentImage" class="max-w-full max-h-full object-contain shadow-2xl rounded-lg" (click)="$event.stopPropagation()" />
+    </div>
+
+    <!-- Controles Izquierda / Derecha -->
+    @if (allImages.length > 1) {
+      <button 
+        (click)="prevImage(); $event.stopPropagation()" 
+        class="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 p-3 md:p-4 rounded-full bg-slate-900/50 hover:bg-slate-900 text-white backdrop-blur-md transition-all cursor-pointer z-[70]"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <button 
+        (click)="nextImage(); $event.stopPropagation()" 
+        class="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 p-3 md:p-4 rounded-full bg-slate-900/50 hover:bg-slate-900 text-white backdrop-blur-md transition-all cursor-pointer z-[70]"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <!-- Indicador de página -->
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 font-medium text-sm tracking-widest bg-slate-900/50 px-4 py-2 rounded-full backdrop-blur-md">
+        {{ selectedImageIndex + 1 }} / {{ allImages.length }}
+      </div>
+    }
+  </div>
+}

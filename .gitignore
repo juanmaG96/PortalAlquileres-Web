@@ -1,0 +1,41 @@
+## ----------------------------------------------------------------------
+## .gitignore oficial para Frontend Angular 19 (Marketplace Web App)
+## ----------------------------------------------------------------------
+
+# Dependencias instaladas
+node_modules/
+
+# Archivos de compilación y caché de Angular
+/dist/
+/.angular
+.angular/
+.sass-cache/
+
+# Archivos de Variables de Entorno y Configuración Sensible
+.env
+.env.*
+!.env.example
+src/environments/environment.development.ts
+src/environments/environment.local.ts
+
+# Logs de Gestores de Paquetes
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Configuraciones de IDE y Editores
+.vscode/
+.idea/
+*.swp
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de Sistema Operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Archivos temporales de pruebas y cobertura
+/coverage
+/.nyc_output

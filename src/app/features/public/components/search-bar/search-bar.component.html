@@ -1,0 +1,74 @@
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md hover:shadow-lg rounded-2xl p-4 md:p-6 transition-all">
+  <form [formGroup]="searchForm" (ngSubmit)="onSearchSubmit()" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+    
+    <!-- Lugar / Ciudad -->
+    <!-- <div class="flex flex-col gap-1.5">
+      <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        📍 Lugar
+      </label>
+      <input 
+        type="text" 
+        formControlName="location" 
+        placeholder="Ej. Paysandú, Centro..."
+        class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+      />
+    </div> -->
+
+    <!-- Categoría -->
+    <div class="flex flex-col gap-1.5">
+      <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        🏠 Categoría
+      </label>
+      <select 
+        formControlName="propertyType"
+        class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors cursor-pointer"
+      >
+        @for (item of propertyTypes; track item.value) {
+          <option [value]="item.value">{{ item.label }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Precio Máximo -->
+    <div class="flex flex-col gap-1.5">
+      <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        💵 Precio Máximo
+      </label>
+      <input 
+        type="number" 
+        formControlName="maxPrice" 
+        placeholder="Ej. 25000"
+        min="0"
+        step="1000"
+        class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+      />
+    </div>
+
+    <!-- Palabra clave -->
+    <div class="flex flex-col gap-1.5">
+      <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        🔍 Palabra clave
+      </label>
+      <input 
+        type="text" 
+        formControlName="keyword" 
+        placeholder="Ej. Garaje, Patio, 2 dorm..."
+        class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+      />
+    </div>
+
+    <!-- Botón de Buscar -->
+    <div>
+      <button 
+        type="submit"
+        class="w-full h-[42px] bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-semibold rounded-xl text-sm shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        Buscar
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,72 @@
+<div class="min-h-screen flex flex-col bg-slate-200 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
+
+  <!-- Main Navigation Header -->
+  <header class="sticky top-0 z-40 bg-slate-200 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 transition-colors shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a routerLink="/" class="flex items-center gap-2.5 text-slate-900 dark:text-white font-extrabold text-lg tracking-tight group">
+        <span class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white font-black text-xl shadow-md group-hover:scale-105 transition-transform">
+          A
+        </span>
+        <span>{{ siteName }}</span>
+      </a>
+
+      <!-- Navigation Links & Controls -->
+      <div class="flex items-center gap-3">
+        
+        @if (authService.isLoggedIn()) {
+          <a 
+            routerLink="/admin" 
+            class="text-xs font-semibold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+          >
+            ⚙️ Panel Admin
+          </a>
+        }
+        @else {
+          <a 
+            routerLink="/contacto" 
+            class="hidden sm:inline-flex items-center justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-md transition-all"
+          >
+            ➕ Quiero publicar Inmueble
+          </a>
+        }
+
+        <!-- Dark Mode Toggle -->
+        <button 
+          (click)="toggleDarkMode()" 
+          title="Cambiar Modo Claro/Oscuro"
+          class="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+        >
+          @if (!isDarkMode) {
+            <span>🌙</span>
+          } @else {
+            <span>☀️</span>
+          }
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Router Outlet for Lazy Loaded Modules -->
+  <div class="flex-1">
+    <router-outlet></router-outlet>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-semibold text-slate-200">{{ siteName }} - Plataforma de Alquileres</p>
+        <p class="text-slate-500 mt-0.5">Operando en la ciudad de {{ cityName }}, {{ country }}. Todos los derechos reservados.</p>
+      </div>
+      <div class="flex gap-4 text-slate-400">
+        <a routerLink="/legales" class="hover:underline">Términos y Privacidad</a>
+        <a routerLink="/contacto" class="hover:underline">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+</div>

@@ -1,0 +1,307 @@
+<div class="max-w-5xl mx-auto px-4 py-8 space-y-6 animate-fade-in">
+
+  <!-- Header Breadcrumb & Back Link -->
+  <div class="flex items-center justify-between">
+    <div class="space-y-1">
+      <a routerLink="/admin/dashboard" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+        ← Volver al Panel
+      </a>
+      <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+        {{ isEditMode ? 'Editar Publicación' : 'Nueva Publicación de Inmueble' }}
+      </h1>
+      <p class="text-xs text-slate-500 dark:text-slate-400">
+        Completa los datos requeridos para publicar en la instancia de {{ defaultCity }}.
+      </p>
+    </div>
+  </div>
+
+  <!-- Success Message Alert -->
+  @if (successMessage) {
+    <div class="p-4 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 rounded-2xl text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 animate-fade-in">
+      <span class="text-base">✅</span>
+      <span>{{ successMessage }}</span>
+    </div>
+  }
+
+  <!-- Error Message Alert -->
+  @if (errorMessage) {
+    <div class="p-4 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 rounded-2xl text-xs font-bold text-rose-800 dark:text-rose-300 flex items-center gap-2 animate-fade-in">
+      <span class="text-base">⚠️</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Form Container Card -->
+  <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl p-6 md:p-8">
+    <form [formGroup]="propertyForm" (ngSubmit)="onSubmit()" class="space-y-8">
+
+      <!-- Section 1: Información Principal -->
+      <div class="space-y-4">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+          <span>📝</span> Información Principal
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Title Field (Full width on 2 cols) -->
+          <div class="md:col-span-2 space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Título de la Publicación *
+            </label>
+            <input 
+              type="text" 
+              formControlName="title"
+              placeholder="Ej. Casa Tradicional en Zona Centro con Garaje"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+            />
+            @if (propertyForm.get('title')?.touched && propertyForm.get('title')?.invalid) {
+              @if (propertyForm.get('title')?.hasError('required')) {
+                <p class="text-[11px] font-semibold text-rose-500 mt-1">El título es obligatorio.</p>
+              }
+              @if (propertyForm.get('title')?.hasError('minlength') || propertyForm.get('title')?.hasError('maxlength')) {
+                <p class="text-[11px] font-semibold text-rose-500 mt-1">El título debe tener entre 10 y 150 caracteres.</p>
+              }
+            }
+          </div>
+
+          <!-- Description Field (Full width on 2 cols) -->
+          <div class="md:col-span-2 space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Descripción Detallada *
+            </label>
+            <textarea 
+              formControlName="description"
+              rows="4"
+              placeholder="Describe las comodidades, estado de conservación, patio, estufa, etc..."
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+            ></textarea>
+            @if (propertyForm.get('description')?.touched && propertyForm.get('description')?.invalid) {
+              <p class="text-[11px] font-semibold text-rose-500 mt-1">La descripción es requerida (mínimo 10 caracteres).</p>
+            }
+          </div>
+
+          <!-- Price & Currency -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Precio Mensual *
+            </label>
+            <div class="flex gap-2">
+              <select 
+                formControlName="currency"
+                class="w-32 px-3 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors cursor-pointer"
+              >
+                @for (c of currencies; track c.value) {
+                  <option [value]="c.value">{{ c.label }}</option>
+                }
+              </select>
+              
+              <input 
+                type="number" 
+                formControlName="price"
+                placeholder="24000"
+                min="1"
+                class="flex-1 px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+              />
+            </div>
+            @if (propertyForm.get('price')?.touched && propertyForm.get('price')?.invalid) {
+              @if (propertyForm.get('price')?.hasError('required')) {
+                <p class="text-[11px] font-semibold text-rose-500 mt-1">El precio es obligatorio.</p>
+              }
+              @if (propertyForm.get('price')?.hasError('min')) {
+                <p class="text-[11px] font-semibold text-rose-500 mt-1">El precio debe ser un valor mayor a 0.</p>
+              }
+            }
+          </div>
+
+          <!-- Categoría / Tipo de Propiedad -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Categoría de Inmueble *
+            </label>
+            <select 
+              formControlName="propertyType"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors cursor-pointer"
+            >
+              @for (t of propertyTypes; track t.value) {
+                <option [value]="t.value">{{ t.label }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Modalidad (Oferta / Demanda) -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Modalidad *
+            </label>
+            <select 
+              formControlName="offerType"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors cursor-pointer"
+            >
+              @for (o of offerTypes; track o.value) {
+                <option [value]="o.value">{{ o.label }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Dormitorios -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Cantidad de Dormitorios *
+            </label>
+            <input 
+              type="number" 
+              formControlName="rooms"
+              min="0"
+              placeholder="1"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+            />
+            @if (propertyForm.get('rooms')?.touched && propertyForm.get('rooms')?.invalid) {
+              <p class="text-[11px] font-semibold text-rose-500 mt-1">Las habitaciones deben ser mayor o igual a 0.</p>
+            }
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Section 2: Ubicación & Contacto -->
+      <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+          <span>📍</span> Ubicación y Datos de Contacto
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Ciudad -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Ciudad / Municipio *
+            </label>
+            <input 
+              type="text" 
+              formControlName="city"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors"
+            />
+          </div>
+
+          <!-- Dirección -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Dirección o Esquina *
+            </label>
+            <input 
+              type="text" 
+              formControlName="address"
+              placeholder="Ej. 18 de Julio y Monte Caseros"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+            />
+            @if (propertyForm.get('address')?.touched && propertyForm.get('address')?.invalid) {
+              <p class="text-[11px] font-semibold text-rose-500 mt-1">La dirección es requerida.</p>
+            }
+          </div>
+
+          <!-- Teléfono de Contacto WhatsApp -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Teléfono de Contacto (WhatsApp) *
+            </label>
+            <input 
+              type="text" 
+              formControlName="contactPhone"
+              placeholder="Ej. +598 99 123 456"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors placeholder:text-slate-400"
+            />
+            @if (propertyForm.get('contactPhone')?.touched && propertyForm.get('contactPhone')?.invalid) {
+              @if (propertyForm.get('contactPhone')?.hasError('required')) {
+                <p class="text-[11px] font-semibold text-rose-500 mt-1">El teléfono de contacto es obligatorio.</p>
+              }
+              @if (propertyForm.get('contactPhone')?.hasError('pattern')) {
+                <p class="text-[11px] font-semibold text-rose-500 mt-1">Formato de teléfono no válido (solo números, espacios, '+' o '-', entre 8 y 15 caracteres).</p>
+              }
+            }
+          </div>
+
+          <!-- Imagenes (Cloudinary File Upload) -->
+          <div class="space-y-2 md:col-span-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+              Galería de Imágenes (Cloudinary)
+            </label>
+
+            <!-- Spinner -->
+            @if (isUploadingImage) {
+              <div class="p-6 bg-slate-50 border-2 border-dashed border-brand-400 rounded-2xl flex flex-col items-center justify-center animate-pulse">
+                <div class="w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-xs font-bold text-brand-600 mt-2">Subiendo imágenes...</p>
+              </div>
+            }
+
+            <!-- Galería -->
+            @if (propertyForm.get('imageUrls')?.value?.length > 0) {
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                @for (url of propertyForm.get('imageUrls')?.value; track url; let idx = $index) {
+                  <div class="relative group rounded-xl overflow-hidden shadow-sm border border-slate-200">
+                    <img [src]="url" class="w-full h-24 object-cover" />
+                    <button type="button" (click)="removeImage(idx)" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                      ✕
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Input File Múltiple -->
+            <div class="relative border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl p-6 bg-slate-50 transition-colors text-center">
+              <!-- ATENCIÓN AL ATRIBUTO 'multiple' AQUI -->
+              <input type="file" multiple accept="image/jpeg, image/png, image/webp" (change)="onFileSelected($event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+              <div class="pointer-events-none">
+                <div class="text-2xl mb-1">📸</div>
+                <p class="text-xs font-bold">Haz clic para agregar más imágenes</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Checkbox Premium -->
+          <div class="md:col-span-2 flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+            <input 
+              type="checkbox" 
+              id="isPremium"
+              formControlName="isPremium"
+              class="w-5 h-5 text-brand-600 rounded focus:ring-brand-500 cursor-pointer"
+            />
+            <label for="isPremium" class="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer">
+              ⭐ Marcar como Publicación Destacada (Premium)
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Action Buttons Row -->
+      <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+        <a 
+          routerLink="/admin/dashboard" 
+          class="px-5 py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl transition-colors"
+        >
+          Cancelar
+        </a>
+
+        <button 
+          type="submit" 
+          [disabled]="propertyForm.invalid || isSubmitting || isUploadingImage"
+          class="px-6 py-3 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+        >
+          @if (isSubmitting) {
+            <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span>Guardando...</span>
+          } @else if (isUploadingImage) {
+            <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span>Subiendo imagen...</span>
+          } @else {
+            <span>{{ isEditMode ? 'Guardar Cambios' : 'Publicar Inmueble' }}</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

@@ -1,0 +1,258 @@
+<div class="p-4 md:p-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
+  
+  <!-- Header Bar with Quick Action "+ Publicar Inmueble" -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md">
+    <div>
+      <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+        Panel de Administración • {{ cityName }}
+      </h1>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        Sesión activa como <span class="font-bold text-brand-600 dark:text-brand-400">{{ authService.currentUserSignal() || 'Administrador' }}</span>
+      </p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Publish Button Linking to /admin/propiedades/nueva -->
+      <a 
+        routerLink="/admin/propiedades/nueva" 
+        class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer"
+      >
+        <span>+</span>
+        <span>Publicar Inmueble</span>
+      </a>
+
+      <!-- Logout Button -->
+      <button 
+        (click)="logout()" 
+        class="px-4 py-2.5 bg-slate-100 hover:bg-rose-600 hover:text-white dark:bg-slate-800 dark:hover:bg-rose-600 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl transition-all cursor-pointer"
+      >
+        Cerrar Sesión 🚪
+      </button>
+    </div>
+  </div>
+
+  <!-- Notification Banner -->
+  @if (actionMessage) {
+    <div class="p-4 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 rounded-2xl text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 animate-fade-in">
+      <span>✅</span>
+      <span>{{ actionMessage }}</span>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error) {
+    <div class="p-4 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 rounded-2xl text-xs font-bold text-rose-800 dark:text-rose-300">
+      {{ error }}
+    </div>
+  }
+
+  <!-- Stats Grid Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
+      <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Publicaciones</p>
+      <p class="text-3xl font-black text-brand-600 dark:text-brand-400 mt-2">{{ totalProperties }}</p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
+      <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Propiedades Destacadas</p>
+      <p class="text-3xl font-black text-amber-500 mt-2">{{ premiumProperties }}</p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
+      <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Estado de la Red</p>
+      <p class="text-3xl font-black text-emerald-500 mt-2">Activo 🟢</p>
+    </div>
+  </div>
+
+  <!-- Properties CRUD Management Table -->
+  <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden space-y-4">
+    
+    <div class="p-6 border-b border-slate-100 dark:border-slate-800 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white">Gestión de Inmuebles</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            {{ currentTab === 'active' ? 'Modera, edita o elimina publicaciones activas.' : 'Visualiza y restaura publicaciones enviadas a la papelera.' }}
+          </p>
+        </div>
+
+        <a 
+          routerLink="/admin/propiedades/nueva" 
+          class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline"
+        >
+          + Crear nueva
+        </a>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pt-2">
+        <button 
+          (click)="setTab('active')"
+          [ngClass]="currentTab === 'active' 
+            ? 'border-brand-600 text-brand-600 dark:border-brand-400 dark:text-brand-400 font-bold bg-brand-50/50 dark:bg-brand-950/30' 
+            : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium'"
+          class="pb-2.5 pt-2 px-4 border-b-2 rounded-t-xl text-xs transition-all cursor-pointer flex items-center gap-2"
+        >
+          <span>🏢 Publicaciones Activas/Pausadas</span>
+        </button>
+
+        <button 
+          (click)="setTab('trash')"
+          [ngClass]="currentTab === 'trash' 
+            ? 'border-brand-600 text-brand-600 dark:border-brand-400 dark:text-brand-400 font-bold bg-brand-50/50 dark:bg-brand-950/30' 
+            : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium'"
+          class="pb-2.5 pt-2 px-4 border-b-2 rounded-t-xl text-xs transition-all cursor-pointer flex items-center gap-2"
+        >
+          <span>🗑️ Papelera</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Skeleton -->
+    @if (loading) {
+      <div class="p-8 text-center text-slate-500 space-y-2">
+        <div class="w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p class="text-xs font-medium">Cargando publicaciones del sistema...</p>
+      </div>
+    } @else {
+
+      <!-- Responsive Table with @for and @empty -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">
+              <th class="py-3.5 px-4">Miniatura</th>
+              <th class="py-3.5 px-4">Título / Dirección</th>
+              <th class="py-3.5 px-4">Categoría</th>
+              <th class="py-3.5 px-4">Precio</th>
+              <th class="py-3.5 px-4">Estado</th>
+              <th class="py-3.5 px-4 text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (prop of properties; track prop.id) {
+              <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                
+                <!-- Thumbnail -->
+                <td class="py-3 px-4">
+                  <div class="w-14 h-12 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800">
+                    <img 
+                      [src]="prop.coverImageUrl || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=200&q=80'" 
+                      [alt]="prop.title"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                </td>
+
+                <!-- Title & Address -->
+                <td class="py-3 px-4 max-w-xs">
+                  <div class="font-bold text-slate-900 dark:text-slate-100 truncate flex items-center gap-1.5">
+                    @if (prop.isPremium) {
+                      <span title="Destacado">⭐</span>
+                    }
+                    <span class="truncate">{{ prop.title }}</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                    {{ prop.address }}, {{ prop.city }}
+                  </div>
+                </td>
+
+                <!-- Category -->
+                <td class="py-3 px-4 font-semibold text-slate-700 dark:text-slate-300">
+                  {{ getPropertyTypeLabel(prop.propertyType) }}
+                </td>
+
+                <!-- Price -->
+                <td class="py-3 px-4 font-extrabold text-brand-600 dark:text-brand-400">
+                  {{ formatPrice(prop.price, prop.currency) }}
+                </td>
+
+                <!-- Status Badge -->
+                <td class="py-3 px-4">
+                  @if (currentTab === 'trash') {
+                    <span class="px-2.5 py-1 text-[10px] font-extrabold uppercase rounded-lg bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">
+                      En Papelera 🗑️
+                    </span>
+                  } @else if (prop.status === 1) {
+                    <span class="px-2.5 py-1 text-[10px] font-extrabold uppercase rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                      Activo 🟢
+                    </span>
+                  } @else {
+                    <span class="px-2.5 py-1 text-[10px] font-extrabold uppercase rounded-lg bg-slate-100 text-slate-500 dark:bg-slate-800/80 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                      Pausado ⚪
+                    </span>
+                  }
+                </td>
+
+                <!-- Action Buttons: Edit/Toggle/Delete vs Restore -->
+                <td class="py-3 px-4 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    @if (currentTab === 'trash') {
+                      <!-- Botón único para Restaurar -->
+                      <button 
+                        (click)="restoreProperty(prop.id, prop.title)"
+                        title="Restaurar Publicación"
+                        class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white dark:bg-emerald-950/40 dark:hover:bg-emerald-600 dark:text-emerald-300 rounded-xl transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-sm"
+                      >
+                        <span>♻️</span>
+                        <span>Restaurar</span>
+                      </button>
+                    } @else {
+                      <!-- Editar -->
+                      <button 
+                        (click)="editProperty(prop.id)"
+                        title="Editar Publicación"
+                        class="p-2 bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 rounded-xl transition-colors cursor-pointer font-bold text-xs"
+                      >
+                        ✏️
+                      </button>
+
+                      <!-- Pausar / Activar (Dinámico) -->
+                      <button 
+                        (click)="toggleStatus(prop)"
+                        [title]="prop.status === 1 ? 'Pausar Publicación (Ocultar)' : 'Activar Publicación (Mostrar)'"
+                        [ngClass]="prop.status === 1 
+                          ? 'bg-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300' 
+                          : 'bg-amber-100 hover:bg-emerald-100 text-amber-700 hover:text-emerald-700 dark:bg-amber-900/50 dark:hover:bg-emerald-900/50 dark:text-amber-400 dark:hover:text-emerald-400'"
+                        class="p-2 rounded-xl transition-colors cursor-pointer font-bold text-xs"
+                      >
+                        {{ prop.status === 1 ? '👁️' : '✗' }}
+                      </button>
+
+                      <!-- Eliminar -->
+                      <button 
+                        (click)="deleteProperty(prop.id, prop.title)"
+                        title="Eliminar Publicación"
+                        class="p-2 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white dark:bg-rose-950/40 dark:hover:bg-rose-600 dark:text-rose-300 rounded-xl transition-colors cursor-pointer font-bold text-xs"
+                      >
+                        🗑️
+                      </button>
+                    }
+                  </div>
+                </td>
+
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="py-12 text-center text-slate-500 dark:text-slate-400">
+                  <div class="text-3xl mb-2">{{ currentTab === 'trash' ? '🗑️' : '📋' }}</div>
+                  <p class="font-bold">
+                    {{ currentTab === 'trash' ? 'No hay publicaciones en la papelera.' : 'No hay publicaciones registradas en el sistema.' }}
+                  </p>
+                  @if (currentTab === 'active') {
+                    <a routerLink="/admin/propiedades/nueva" class="text-xs text-brand-600 hover:underline mt-1 inline-block font-semibold">
+                      + Crear la primera publicación
+                    </a>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    }
+
+  </div>
+
+</div>

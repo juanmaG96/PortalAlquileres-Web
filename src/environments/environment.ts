@@ -2,18 +2,18 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:5000/api',
   whiteLabel: {
-    city: 'Paysandú',
-    country: 'Uruguay',
-    siteName: 'Alquileres Paysandú',
+    city: 'Concepción del Uruguay',
+    country: 'Argentina',
+    siteName: 'Alquileres Concepción del Uruguay',
     logoUrl: '/assets/logo-paysandu.svg',
-    defaultCurrency: '$',
+    defaultCurrency: 'ARS',
     dialect: {
-      apartment: 'Apartamento',
-      apartments: 'apartamentos'
+      apartment: 'Departamento',
+      apartments: 'departamentos'
     },
     tallyFormId: 'NpNPxB',
     whatsappNumber: '5493442000000',
-    contactEmail: 'contacto@alquilerespaysandu.com',
-    cdnBaseUrl: 'https://cdn.alquilerespaysandu.com'
+    contactEmail: 'contacto@test.com',
+    cdnBaseUrl: 'https://cdn.test.com'
   }
 };

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://p01--test-alquileres--t9d9t99rgq2c.code.run/api',
+  apiUrl: 'https://p01--test-alquileres--t9d9t99rgq2c.code.run',
   whiteLabel: {
     city: 'Concepción del Uruguay',
     country: 'Argentina',

@@ -4,7 +4,7 @@ export const environment = {
   whiteLabel: {
     city: 'Concepción del Uruguay',
     country: 'Argentina',
-    siteName: 'Alquileres Concepción del Uruguay',
+    siteName: 'Portal Alquileres',
     logoUrl: '/assets/logo-paysandu.svg',
     defaultCurrency: 'ARS',
     dialect: {

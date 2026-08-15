@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     // Seteamos el título de la pestaña y la descripción SEO dinámicamente
-    this.titleService.setTitle(`${this.siteName} - Marketplace Inmobiliario`);
+    this.titleService.setTitle(`${this.siteName} - Portal Alquileres`);
     
     this.metaService.updateTag({ 
       name: 'description', 

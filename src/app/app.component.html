@@ -17,7 +17,7 @@
         
         @if (authService.isLoggedIn()) {
           <a 
-            routerLink="/admin" 
+            routerLink="/gestion-portal-propiedades" 
             class="text-xs font-semibold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
           >
             ⚙️ Panel Admin
@@ -59,7 +59,7 @@
   <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-auto">
     <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
       <div>
-        <p class="font-semibold text-slate-200">{{ siteName }} - Plataforma de Alquileres</p>
+        <p class="font-semibold text-slate-200">{{ siteName }}</p>
         <p class="text-slate-500 mt-0.5">Operando en la ciudad de {{ cityName }}, {{ country }}. Todos los derechos reservados.</p>
       </div>
       <div class="flex gap-4 text-slate-400">

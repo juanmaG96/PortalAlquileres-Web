@@ -30,13 +30,15 @@ export class PropertyFormComponent implements OnInit {
   uploadError: string | null = null;
 
   defaultCity = environment.whiteLabel.city;
+  apartamentLabel = environment.whiteLabel.dialect.apartment;
 
   propertyTypes = [
     { value: PropertyType.House, label: 'Casa' },
-    { value: PropertyType.Apartment, label: 'Apartamento' },
+    { value: PropertyType.Apartment, label: this.apartamentLabel },
     { value: PropertyType.Commercial, label: 'Local Comercial' },
     { value: PropertyType.Land, label: 'Terreno' },
-    { value: PropertyType.Room, label: 'Habitación' }
+    { value: PropertyType.Room, label: 'Habitación' },
+    { value: PropertyType.Residence, label: 'Residencia' }
   ];
 
   offerTypes = [
@@ -46,7 +48,9 @@ export class PropertyFormComponent implements OnInit {
 
   currencies = [
     { value: 'UYU', label: '$ (UYU)' },
+    { value: 'ARS', label: '$ (ARS)' },
     { value: 'USD', label: 'U$S (USD)' }
+    
   ];
 
   ngOnInit(): void {

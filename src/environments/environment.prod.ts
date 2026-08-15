@@ -6,7 +6,7 @@ export const environment = {
     country: 'Argentina',
     siteName: 'Portal Alquileres',
     logoUrl: '/assets/logo-paysandu.svg',
-    defaultCurrency: '$',
+    defaultCurrency: 'ARS',
     dialect: {
       apartment: 'Departamento',
       apartments: 'departamentos'

@@ -137,7 +137,7 @@ export class PropertyDetailComponent implements OnInit {
     if (this.property.latitude && this.property.longitude) {
       return `https://www.google.com/maps/search/?api=1&query=${this.property.latitude},${this.property.longitude}`;
     }
-    const escapedAddr = encodeURIComponent(`${this.property.address}, ${this.property.city}, Uruguay`);
+    const escapedAddr = encodeURIComponent(`${this.property.address}, ${this.property.city}, ${environment.whiteLabel.province}, ${environment.whiteLabel.country}`);
     return `https://www.google.com/maps/search/?api=1&query=${escapedAddr}`;
   }
 

@@ -3,6 +3,7 @@ export const environment = {
   apiUrl: 'http://localhost:5000/api',
   whiteLabel: {
     city: 'Paysandú',
+    province: 'Paysandú',
     country: 'Uruguay',
     siteName: 'Alquileres Paysandú',
     logoUrl: '/assets/logo-paysandu.svg',

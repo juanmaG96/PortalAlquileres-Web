@@ -233,11 +233,16 @@ export class PropertyDetailComponent implements OnInit {
   private async initLeafletMap(): Promise<void> {
     if (!this.isBrowser || !this.detailMapContainer || !this.property || this.leafletMap) return;
 
-    const lat = this.property.latitude ?? -32.3214;
-    const lon = this.property.longitude ?? -58.0756;
+    // Coordenadas por defecto (Concepción del Uruguay)
+    const lat = this.property.latitude ?? -32.4825; 
+    const lon = this.property.longitude ?? -58.2372;
 
     try {
-      const L = await import('leaflet');
+      // Importamos el módulo
+      const leafletModule = await import('leaflet');
+      
+      // Extraemos Leaflet del módulo (la clave de la solución)
+      const L = leafletModule.default ? leafletModule.default : leafletModule;
       
       this.leafletMap = L.map(this.detailMapContainer.nativeElement).setView([lat, lon], 15);
 

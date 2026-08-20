@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
 
   siteName = environment.whiteLabel.siteName;
   cityName = environment.whiteLabel.city;
+  provinceName = environment.whiteLabel.province;
   country = environment.whiteLabel.country;
   apartmentLabel = environment.whiteLabel.dialect.apartment;
   isDarkMode = false;
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit {
     
     this.metaService.updateTag({ 
       name: 'description', 
-      content: `Busca y encuentra los mejores alquileres de casas, ${this.apartmentLabel.toLowerCase()}s y locales comerciales en ${this.cityName}, ${this.country}. Plataforma administrada.` 
+      content: `Busca y encuentra los mejores alquileres de casas, ${this.apartmentLabel.toLowerCase()}s y locales comerciales en ${this.cityName}, ${this.provinceName}, ${this.country}. Plataforma administrada.` 
     });
   }
 

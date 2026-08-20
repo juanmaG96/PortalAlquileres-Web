@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { PropertyService } from '../../../../core/services/property.service';
 import { UploadService } from '../../../../core/services/upload.service';
-import { OfferType, PropertyType } from '../../../../core/models/property.model';
+import { OfferType, PropertyDetail, PropertyType } from '../../../../core/models/property.model';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -162,19 +162,26 @@ export class PropertyFormComponent implements OnInit {
     this.successMessage = null;
 
     const formValues = this.propertyForm.value;
-
-    const payload = {
-      ...formValues,
-      id: this.isEditMode && this.propertyId ? this.propertyId : '00000000-0000-0000-0000-000000000000',
-      status: 1, // 1 = PropertyStatus.Active
-      createdAt: new Date().toISOString(), // Fecha actual para pasar validación
+    
+    const payload: Partial<PropertyDetail> = {
+      title: formValues.title,
+      description: formValues.description,
       price: Number(formValues.price),
+      currency: formValues.currency,
       rooms: Number(formValues.rooms),
       propertyType: Number(formValues.propertyType),
       offerType: Number(formValues.offerType),
+      city: formValues.city,
+      address: formValues.address,
+      contactPhone: formValues.contactPhone,
       imageUrls: formValues.imageUrls || [],
       isPremium: formValues.isPremium || false
     };
+
+    if (this.isEditMode && this.propertyId) {
+      payload.id = this.propertyId;
+      
+    }
 
     const request$ = this.isEditMode 
       ? this.propertyService.updateProperty(this.propertyId!, payload) 
@@ -184,7 +191,8 @@ export class PropertyFormComponent implements OnInit {
       next: () => {
         this.isSubmitting = false;
         this.successMessage = this.isEditMode ? '¡Actualizada!' : '¡Creada!';
-        setTimeout(() => this.router.navigate(['/admin/dashboard']), 1500);
+        // Redirigimos a la ruta segura ofuscada que configuramos antes
+        setTimeout(() => this.router.navigate(['/gestion-portal-propiedades/dashboard']), 1500);
       },
       error: (err) => {
         console.error('Error del servidor:', err);

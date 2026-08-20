@@ -42,7 +42,7 @@ export class LoginComponent {
     this.authService.login(credentials).subscribe({
       next: () => {
         this.isSubmitting = false;
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin/dashboard';
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/gestion-portal-propiedades/dashboard';
         this.router.navigateByUrl(returnUrl);
       },
       error: (err) => {

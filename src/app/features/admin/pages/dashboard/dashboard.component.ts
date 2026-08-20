@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit {
   }
 
   editProperty(id: string): void {
-    this.router.navigate(['/admin/propiedades/editar', id]);
+    this.router.navigate(['/gestion-portal-propiedades/propiedades/editar', id]);
   }
 
   toggleStatus(prop: PropertySummary): void {
@@ -157,6 +157,6 @@ export class DashboardComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/admin/login']);
+    this.router.navigate(['/gestion-portal-propiedades/login']);
   }
 }
